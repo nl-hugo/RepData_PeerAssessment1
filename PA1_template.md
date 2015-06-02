@@ -8,6 +8,9 @@ Hugo Janssen
 
 ## Loading and preprocessing the data
 
+The first step is to unzip and read the data.
+
+
 ```r
 # Unzip the data file to the data directory
 unzip("activity.zip")
@@ -37,7 +40,8 @@ summary(d)
 
 ## What is mean total number of steps taken per day?
 
-A histogram with the total number of steps per day: 
+A histogram shows the total number of steps per day: 
+
 
 ```r
 # Aggregate the data
@@ -47,7 +51,7 @@ agg <- aggregate(x=d[c("steps")], by=list(Group.date=d$date), FUN=sum)
 hist(agg$steps, breaks=10, main="Distribution of the total number of steps per day", xlab="Steps per day")
 ```
 
-<img src="PA1_template_files/figure-html/histogram-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="PA1_template_files/figure-html/plot_histogram-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 The <b>mean</b> number of steps is 10766.19 and the <b>median</b> is 10765.
 
@@ -55,17 +59,24 @@ The <b>mean</b> number of steps is 10766.19 and the <b>median</b> is 10765.
 
 ## What is the average daily activity pattern?
 
+The line chart shows the average number of steps during the day:
 
-Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) 
-and the average number of steps taken, averaged across all days (y-axis)
 
 ```r
-#hist(c2$interval, breaks=10, main="Distribution of the total number of steps per day", xlab="Steps per day")
+# Aggregate the data
+agg2 <- aggregate(x=d[c("steps")], by=list(Group.interval=d$interval), FUN=mean, na.rm=TRUE)
+
+# Format the interval as time format
+agg2$Group.interval <- strptime(formatC(agg2$Group.interval, width=4, flag="0"), "%H%M")
+
+# Plot the time series
+plot(agg2, type="l", main="Average number of steps during the day", xlab="Time of day", ylab="Average number of steps")
+axis.POSIXct(1, agg2$Group.interval, format="%H:%M")
 ```
+
+<img src="PA1_template_files/figure-html/plot_average-1.png" title="" alt="" style="display: block; margin: auto;" />
  
-
-
-Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+The <b>maximum</b> number of steps is measured at 08:35:00.
 
 
 
